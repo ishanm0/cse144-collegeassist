@@ -1,0 +1,28 @@
+[tool.poetry]
+name = "backend"
+version = "0.1.0"
+description = ""
+authors = ["github-actions <jojoto8845@icloud.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.12"
+pre-commit = "4.0.1"
+requests = "^2.31.0"
+
+[tool.poetry.dev-dependencies]
+flake8 = "^7.1.1"
+black = "^24.8.0"
+isort = "^5.13.2"
+mypy = "^1.11.2"
+safety = "^3.2.7"
+bandit = "^1.7.9"
+vulture = "^2.11"
+types-requests = "^2.31.0"  # Moved and version corrected
+
+[tool.poetry.group.dev.dependencies]
+types-urllib3 = "^1.26.25.14"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

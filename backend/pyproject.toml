@@ -9,6 +9,8 @@ readme = "README.md"
 python = "^3.12"
 pre-commit = "4.0.1"
 requests = "^2.31.0"
+numpy = "^2.1.2"
+ipykernel = "^6.29.5"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^7.1.1"

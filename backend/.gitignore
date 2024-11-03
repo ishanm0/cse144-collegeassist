@@ -1,5 +1,6 @@
 # Personal use
 .data/
+keyfile.json
 
 # Byte-compiled / optimized / DLL files
 __pycache__/

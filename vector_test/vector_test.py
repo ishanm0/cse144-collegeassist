@@ -24,12 +24,10 @@ from google.cloud import bigquery
 from google.cloud import functions_v1
 from google.api_core.exceptions import Conflict
 
-# project_id = "cse-144-project"
-
 # Saving this as a variable to reference in function app in later step
 openai_api_key = json.load(
     open(os.path.join(os.path.dirname(os.path.abspath(__file__)), "openai.json"))
-)[0]
+)["key"]
 openai_client = OpenAI(api_key=openai_api_key)
 embeddings_model = "text-embedding-3-small"  # We'll use this by default, but you can change to your text-embedding-3-large if desired
 
@@ -323,6 +321,7 @@ if PROCESS_FILES:
 else:
     client = bigquery.Client(credentials=credentials, project=project_id)
 
+print("\nTAKE 1")
 
 query = "What model should I use to embed?"
 category = "models"
@@ -352,7 +351,7 @@ for row in results:
         f"query_id: {row['query_id']}, base_id: {row['base_id']}, distance: {row['distance']}, text_truncated: {row['text'][0:100]}"
     )
 
-print("TAKE 2")
+print("\nTAKE 2")
 
 query = "What model should I use to embed?"
 category = "models"

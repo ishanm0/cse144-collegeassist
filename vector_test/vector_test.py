@@ -187,7 +187,7 @@ def process_file(file_path, idx, categories, embeddings_model):
     return data
 
 
-PROCESS_FILES = False
+PROCESS_FILES = True
 
 if PROCESS_FILES:
     ## Customize the location below if you are using different data besides the OpenAI documentation. Note that if you are using a different dataset, you will need to update the categories list as well.
@@ -298,7 +298,19 @@ if PROCESS_FILES:
     final_table_id = f"{dataset_id}." + raw_table_id
 
     # Create the final table object
-    final_table = bigquery.Table(final_table_id, schema=final_schema)
+    idx = -1
+    found = False
+
+    while not found:
+        idx += 1
+        try:
+            final_table = bigquery.Table(f"{final_table_id}_{idx}", schema=final_schema)
+            client.get_table(final_table)
+            print(f"Table {final_table_id}_{idx} already exists")
+        except Exception as e:
+            found = True
+            print(f"Table {final_table_id}_{idx} does not exist")
+
 
     # Send the table to the API for creation
     final_table = client.create_table(final_table, exists_ok=True)  # API request

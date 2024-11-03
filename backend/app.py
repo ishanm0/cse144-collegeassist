@@ -1,6 +1,9 @@
+import io
+
 from src.config import DATA_DIR_PATH
 from src.File.FileManager import create_unique_filename
 from src.Logging.Logging import logger
+from src.Web.GoogleCloudStorage import upload_file
 from src.Web.WebCrawler import (
     ContentExtractor,
     LinkResolver,
@@ -9,17 +12,15 @@ from src.Web.WebCrawler import (
 )
 
 if __name__ == "__main__":
-    start_url = "https://www.ucsc.edu/"
-    max_depth = 1
+    start_url = "https://admissions.ucsc.edu/"
+    max_depth = 10
 
     crawler = WebCrawler(SessionManager, LinkResolver, ContentExtractor)
     crawled_data = crawler.crawl(start_url, max_depth)
 
     for item in crawled_data:
         filename = create_unique_filename(item["url"], DATA_DIR_PATH)
-        with open(filename, "w", encoding="utf-8") as file:
-            file.write(f"\n{item['text']}\n")
-
+        upload_file(io.BytesIO(item["text"].encode("utf-8")), filename)
         logger.info(f"Content from {item['url']} saved to {filename}")
 
     logger.info(f"Total pages crawled: {len(crawled_data)}")

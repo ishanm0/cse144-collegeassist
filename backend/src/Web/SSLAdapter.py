@@ -2,12 +2,10 @@ import ssl
 
 from requests.adapters import HTTPAdapter
 
-# from requests.packages.urllib3.util.ssl_ import create_urllib3_context
-from urllib3.util.ssl_ import create_urllib3_context
-
 # Create a custom SSL context
 context = ssl.create_default_context()
-context.set_ciphers("DEFAULT:@SECLEVEL=1")
+context.check_hostname = False
+context.verify_mode = ssl.CERT_NONE
 
 
 class SSLAdapter(HTTPAdapter):
@@ -15,7 +13,7 @@ class SSLAdapter(HTTPAdapter):
 
     def __init__(self, ssl_version=None, **kwargs):
         self.ssl_version = ssl_version
-        self.ssl_context = create_urllib3_context(ciphers="DEFAULT@SECLEVEL=1")
+        self.ssl_context = context
         super().__init__(**kwargs)
 
     def init_poolmanager(self, *args, **kwargs):

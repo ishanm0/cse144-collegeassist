@@ -11,6 +11,10 @@ pre-commit = "4.0.1"
 requests = "^2.31.0"
 numpy = "^2.1.2"
 ipykernel = "^6.29.5"
+bs4 = "^0.0.2"
+colorlog = "^6.9.0"
+python-dotenv = "^1.0.1"
+firebase-admin = "^6.5.0"
 
 [tool.poetry.dev-dependencies]
 flake8 = "^7.1.1"

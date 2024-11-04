@@ -37,7 +37,7 @@ class LinkResolver:
             href = link["href"]
             if not href.startswith("http"):
                 href = requests.compat.urljoin(url, href)
-            if href not in visited and LinkResolver.same_domain(href, base_url):
+            if href not in visited and LinkResolver.same_domain(href, base_url) and not "#" in href:
                 links.append(href)
         return links
     
@@ -102,7 +102,7 @@ class WebCrawler:
 
                 # text = self.content_extractor.extract_main_text(soup)
                 text = self.content_extractor.convert_to_md(soup)
-                data =  {"url": url, "depth": depth, "text": text}
+                data =  {"url": url, "title": soup.find('title').text, "depth": depth, "text": text}
                 new_links = self.link_resolver.resolve_links(url, base_url, soup, visited)
                 for link in new_links:
                     queue.append((link, depth + 1))

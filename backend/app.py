@@ -21,10 +21,11 @@ def upload_to_cloud(item):
 
 if __name__ == "__main__":
     start_url = "https://admissions.ucsc.edu/"
+    base_url = "ucsc.edu"
     max_depth = 1
 
     crawler = WebCrawler(SessionManager, LinkResolver, ContentExtractor)
-    crawled_data = crawler.crawl(start_url, max_depth)
+    crawled_data = crawler.crawl(start_url, base_url, max_depth)
     num_crawled = 0
 
     for item in crawled_data:

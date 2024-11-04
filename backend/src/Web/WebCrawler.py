@@ -6,6 +6,7 @@ from src.Logging.Logging import logger
 from src.Web.SSLAdapter import SSLAdapter
 import markdownify
 import re
+import tldextract
 
 
 class SessionManager:
@@ -30,15 +31,24 @@ class LinkResolver:
     """Handles URL resolution and filtering of links on a page."""
 
     @staticmethod
-    def resolve_links(base_url, soup, visited):
+    def resolve_links(url, base_url, soup, visited):
         links = []
         for link in soup.find_all("a", href=True):
             href = link["href"]
             if not href.startswith("http"):
-                href = requests.compat.urljoin(base_url, href)
-            if href not in visited:
+                href = requests.compat.urljoin(url, href)
+            if href not in visited and LinkResolver.same_domain(href, base_url):
                 links.append(href)
         return links
+    
+    @staticmethod
+    def same_domain(url, base_url):
+        sub_parts = tldextract.extract(url)
+        parent_parts = tldextract.extract(base_url)
+
+        # Compare the root domain and suffix
+        return (sub_parts.domain == parent_parts.domain and
+                sub_parts.suffix == parent_parts.suffix)
 
 
 class ContentExtractor:
@@ -72,7 +82,7 @@ class WebCrawler:
         self.link_resolver = link_resolver
         self.content_extractor = content_extractor
 
-    def crawl(self, start_url, max_depth):
+    def crawl(self, start_url, base_url, max_depth):
         visited = set()
         queue = deque([(start_url, 0)])
         # data = []
@@ -93,7 +103,7 @@ class WebCrawler:
                 # text = self.content_extractor.extract_main_text(soup)
                 text = self.content_extractor.convert_to_md(soup)
                 data =  {"url": url, "depth": depth, "text": text}
-                new_links = self.link_resolver.resolve_links(url, soup, visited)
+                new_links = self.link_resolver.resolve_links(url, base_url, soup, visited)
                 for link in new_links:
                     queue.append((link, depth + 1))
                 

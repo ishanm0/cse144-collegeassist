@@ -13,7 +13,7 @@ from src.Web.WebCrawler import (
 
 if __name__ == "__main__":
     start_url = "https://admissions.ucsc.edu/"
-    max_depth = 10
+    max_depth = 1
 
     crawler = WebCrawler(SessionManager, LinkResolver, ContentExtractor)
     crawled_data = crawler.crawl(start_url, max_depth)

@@ -38,7 +38,7 @@ def upload_file(file_stream, filename):
         return f"File '{filename}' uploaded successfully."
     except Exception as e:
         logger.error(f"Failed to upload file '{filename}': {str(e)}")
-        raise Exception(f"Failed to upload file: {str(e)}")
+        # raise Exception(f"Failed to upload file: {str(e)}")
 
 
 def download_file(filename):

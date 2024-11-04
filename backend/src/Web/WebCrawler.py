@@ -66,7 +66,7 @@ class WebCrawler:
     def crawl(self, start_url, max_depth):
         visited = set()
         queue = deque([(start_url, 0)])
-        data = []
+        # data = []
 
         while queue:
             url, depth = queue.popleft()
@@ -82,12 +82,14 @@ class WebCrawler:
                 soup = BeautifulSoup(response.text, "html.parser")
 
                 text = self.content_extractor.extract_main_text(soup)
-                data.append({"url": url, "depth": depth, "text": text})
+                data =  {"url": url, "depth": depth, "text": text}
                 new_links = self.link_resolver.resolve_links(url, soup, visited)
                 for link in new_links:
                     queue.append((link, depth + 1))
+                
+                yield data
 
             except Exception as e:
                 logger.error(f"Error crawling {url}: {str(e)}")
 
-        return data
+        # return data

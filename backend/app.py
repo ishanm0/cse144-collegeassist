@@ -14,7 +14,7 @@ from src.Web.WebCrawler import (
 )
 
 def upload_to_cloud(item):
-    filename = item["url"].replace("https://", "").replace("http://", "").replace("/", "_")
+    filename = item["url"].replace("https://", "").replace("http://", "").replace("/", "-")+".txt"
     filename = os.path.join(DATA_DIR_PATH, filename)
     upload_file(io.BytesIO(item["text"].encode("utf-8")), filename)
     logger.info(f"Content from {item['url']} saved to {filename}")

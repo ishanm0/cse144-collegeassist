@@ -4,6 +4,8 @@ import requests
 from bs4 import BeautifulSoup
 from src.Logging.Logging import logger
 from src.Web.SSLAdapter import SSLAdapter
+import markdownify
+import re
 
 
 class SessionManager:
@@ -53,7 +55,14 @@ class ContentExtractor:
             return main_content.get_text(separator="\n", strip=True)
         else:
             return "No <main> content found."
+        
+    @staticmethod
+    def convert_to_md(soup):
+        html = soup.find("main") or soup.find("body") or soup
+        text = markdownify.markdownify(str(html), strip=["a", "img"])
+        text = re.sub(r"\n\n+", "\n", text).strip()
 
+        return text
 
 class WebCrawler:
     """Crawls a website up to a given depth and returns page content."""
@@ -81,7 +90,8 @@ class WebCrawler:
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, "html.parser")
 
-                text = self.content_extractor.extract_main_text(soup)
+                # text = self.content_extractor.extract_main_text(soup)
+                text = self.content_extractor.convert_to_md(soup)
                 data =  {"url": url, "depth": depth, "text": text}
                 new_links = self.link_resolver.resolve_links(url, soup, visited)
                 for link in new_links:

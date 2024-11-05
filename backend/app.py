@@ -12,7 +12,7 @@ from src.Web.WebCrawler import (
 )
 
 if __name__ == "__main__":
-    start_url = "https://admissions.ucsc.edu/"
+    start_url = "https://www.ucsc.edu/"
     max_depth = 10
 
     crawler = WebCrawler(SessionManager, LinkResolver, ContentExtractor)

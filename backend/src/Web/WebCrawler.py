@@ -7,7 +7,8 @@ from src.Web.SSLAdapter import SSLAdapter
 
 
 class SessionManager:
-    """Manages the creation of a session with specific headers and SSL configurations."""
+    """Manages the creation of a session with specific headers and
+    SSL configurations."""
 
     @staticmethod
     def create_session():
@@ -16,8 +17,9 @@ class SessionManager:
         session.headers.update(
             {
                 "User-Agent": (
-                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64)"
-                    " AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 Safari/537.36"
+                    "Mozilla/5.0 (Windows NT 10.0; Win64; x64) "
+                    "AppleWebKit/537.36 (KHTML, like Gecko) Chrome/91.0.4472.124 "
+                    "Safari/537.36"
                 )
             }
         )
@@ -58,7 +60,12 @@ class ContentExtractor:
 class WebCrawler:
     """Crawls a website up to a given depth and returns page content."""
 
-    def __init__(self, session_manager: SessionManager, link_resolver: LinkResolver, content_extractor: ContentExtractor):
+    def __init__(
+        self,
+        session_manager: SessionManager,
+        link_resolver: LinkResolver,
+        content_extractor: ContentExtractor,
+    ):
         self.session = session_manager.create_session()
         self.link_resolver = link_resolver
         self.content_extractor = content_extractor
@@ -74,7 +81,7 @@ class WebCrawler:
                 continue
             visited.add(url)
 
-            logger.info(f"Crawling URL at depth {depth}: {url}")
+            logger.info(f"Crawling (depth {depth}): {url}")
 
             try:
                 response = self.session.get(url, timeout=10)

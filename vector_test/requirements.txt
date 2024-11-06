@@ -1,0 +1,10 @@
+google-auth
+openai
+pandas
+google-cloud-functions
+python-dotenv
+pyperclip
+PyPDF2
+tiktoken
+google-cloud-bigquery
+pyyaml

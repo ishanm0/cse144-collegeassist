@@ -30,10 +30,6 @@ if __name__ == "__main__":
     num_crawled = 0
 
     for item in crawled_data:
-        # filename = create_unique_filename(item["url"], DATA_DIR_PATH)
-        # filename = item["text"]
-        # upload_file(io.BytesIO(item["text"].encode("utf-8")), filename)
-        # logger.info(f"Content from {item['url']} saved to {filename}")
         thread = Thread(target=upload_to_cloud, args=(item,))
         thread.start()
         num_crawled += 1

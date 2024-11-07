@@ -31,6 +31,17 @@ class LinkResolver:
     """Handles URL resolution and filtering of links on a page."""
 
     @staticmethod
+    def resolve_links(url, soup, visited):
+        links = []
+        for link in soup.find_all("a", href=True):
+            href = link["href"]
+            if not href.startswith("http"):
+                href = requests.compat.urljoin(url, href)
+            if href not in visited:
+                links.append(href)
+        return links
+
+    @staticmethod
     def resolve_links(url, base_url, soup, visited):
         links = []
         for link in soup.find_all("a", href=True):

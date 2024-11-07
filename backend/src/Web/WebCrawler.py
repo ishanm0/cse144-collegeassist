@@ -4,6 +4,9 @@ import requests
 from bs4 import BeautifulSoup
 from src.Logging.Logging import logger
 from src.Web.SSLAdapter import SSLAdapter
+import markdownify
+import re
+import tldextract
 
 
 class SessionManager:
@@ -30,15 +33,35 @@ class LinkResolver:
     """Handles URL resolution and filtering of links on a page."""
 
     @staticmethod
-    def resolve_links(base_url, soup, visited):
+    def resolve_links(url, soup, visited):
         links = []
         for link in soup.find_all("a", href=True):
             href = link["href"]
             if not href.startswith("http"):
-                href = requests.compat.urljoin(base_url, href)
+                href = requests.compat.urljoin(url, href)
             if href not in visited:
                 links.append(href)
         return links
+
+    @staticmethod
+    def resolve_links(url, base_url, soup, visited):
+        links = []
+        for link in soup.find_all("a", href=True):
+            href = link["href"]
+            if not href.startswith("http"):
+                href = requests.compat.urljoin(url, href)
+            if href not in visited and LinkResolver.same_domain(href, base_url) and not "#" in href:
+                links.append(href)
+        return links
+    
+    @staticmethod
+    def same_domain(url, base_url):
+        sub_parts = tldextract.extract(url)
+        parent_parts = tldextract.extract(base_url)
+
+        # Compare the root domain and suffix
+        return (sub_parts.domain == parent_parts.domain and
+                sub_parts.suffix == parent_parts.suffix)
 
 
 class ContentExtractor:
@@ -55,7 +78,14 @@ class ContentExtractor:
             return main_content.get_text(separator="\n", strip=True)
         else:
             return "No <main> content found."
+        
+    @staticmethod
+    def convert_to_md(soup):
+        html = soup.find("main") or soup.find("body") or soup
+        text = markdownify.markdownify(str(html), strip=["a", "img"])
+        text = re.sub(r"\n\n+", "\n", text).strip()
 
+        return text
 
 class WebCrawler:
     """Crawls a website up to a given depth and returns page content."""
@@ -70,10 +100,9 @@ class WebCrawler:
         self.link_resolver = link_resolver
         self.content_extractor = content_extractor
 
-    def crawl(self, start_url, max_depth):
+    def crawl(self, start_url, base_url, max_depth):
         visited = set()
         queue = deque([(start_url, 0)])
-        data = []
 
         while queue:
             url, depth = queue.popleft()
@@ -88,13 +117,13 @@ class WebCrawler:
                 response.raise_for_status()
                 soup = BeautifulSoup(response.text, "html.parser")
 
-                text = self.content_extractor.extract_main_text(soup)
-                data.append({"url": url, "depth": depth, "text": text})
-                new_links = self.link_resolver.resolve_links(url, soup, visited)
+                text = self.content_extractor.convert_to_md(soup)
+                data =  {"url": url, "title": soup.find('title').text, "depth": depth, "text": text}
+                new_links = self.link_resolver.resolve_links(url, base_url, soup, visited)
                 for link in new_links:
                     queue.append((link, depth + 1))
+                
+                yield data
 
             except Exception as e:
                 logger.error(f"Error crawling {url}: {str(e)}")
-
-        return data

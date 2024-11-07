@@ -23,6 +23,7 @@ def upload_to_cloud(item):
 if __name__ == "__main__":
     start_url = "https://admissions.ucsc.edu/"
     base_url = "ucsc.edu"
+
     max_depth = 10
 
     crawler = WebCrawler(SessionManager, LinkResolver, ContentExtractor)

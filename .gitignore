@@ -1,0 +1,4 @@
+venv/
+*google.json
+*openai.json
+.env

@@ -1,0 +1,23 @@
+[tool.poetry]
+name = "JupyterNotebook"
+version = "0.1.0"
+description = ""
+authors = ["github-actions <jojoto8845@icloud.com>"]
+readme = "README.md"
+
+[tool.poetry.dependencies]
+python = "^3.9"
+numpy = "<2.0.0"
+pandas = "1.5.3"  # Latest compatible version for Python 3.8
+ragas = "0.2.4"
+langchain = "0.2.4"  # Older version, compatible with Python 3.8
+openai = "^1.54.3"
+google-cloud-storage = "^2.18.2"
+google-cloud-bigquery = "^3.26.0"
+google-auth = "^2.36.0"
+google-auth-oauthlib = "^1.2.1"
+notebook = "^7.2.2"
+
+[build-system]
+requires = ["poetry-core"]
+build-backend = "poetry.core.masonry.api"

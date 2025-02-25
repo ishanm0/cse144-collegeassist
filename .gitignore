@@ -1,3 +1,5 @@
+.DS_Store
+
 # API key files
 *google.json
 *openai.json

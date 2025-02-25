@@ -1,7 +1,10 @@
-from logging import ERROR, INFO, FileHandler, Formatter, StreamHandler, getLogger
+from logging import DEBUG, INFO, FileHandler, Formatter, StreamHandler, getLogger
 
 import colorlog
 from src.config import LOG_FILE_PATH
+
+# ERROR
+
 
 logger = getLogger(__name__)
 logger.setLevel(INFO)
@@ -24,7 +27,7 @@ logger.addHandler(stream)
 
 
 file = FileHandler(LOG_FILE_PATH)
-file.setLevel(ERROR)
+file.setLevel(DEBUG)
 file_formatter = Formatter("%(asctime)s - %(levelname)s - %(filename)s - %(name)s - %(funcName)s - %(message)s")
 file.setFormatter(file_formatter)
 logger.addHandler(file)
